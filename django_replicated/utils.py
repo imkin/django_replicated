@@ -32,7 +32,7 @@ def check_state_override(request, state):
         match = urlresolvers.resolve(request.path_info)
         import_path = _get_func_import_path(match.func)
 
-        for lookup_view, forced_state in overrides.iteritems():
+        for lookup_view, forced_state in overrides.items():
             if match.url_name == lookup_view or import_path == lookup_view:
                 state = forced_state
                 break
@@ -82,7 +82,7 @@ class Routers(object):
         for r in db.router.routers:
             if hasattr(r, name):
                 return getattr(r, name)
-        msg = u'Not found the router with the method "%s".' % name
+        msg = 'Not found the router with the method "%s".' % name
         raise AttributeError(msg)
 
 

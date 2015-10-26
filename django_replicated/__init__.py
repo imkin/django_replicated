@@ -1,1 +1,1 @@
-from router import ReplicationRouter
+from .router import ReplicationRouter

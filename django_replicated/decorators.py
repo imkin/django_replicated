@@ -17,9 +17,9 @@ Usage:
     def my_view(request, ...):
         # same with slave connection
 '''
-import utils
+from . import utils
 from functools import wraps
-from utils import routers
+from .utils import routers
 
 def _use_state(state):
     def decorator(func):

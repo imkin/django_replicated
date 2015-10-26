@@ -22,14 +22,14 @@ def _db_is_alive(db_name):
     db = connections[db_name]
     try:
         if db.connection is not None and hasattr(db.connection, 'ping'):
-            logger.debug(u'Ping db %s.', db_name)
+            logger.debug('Ping db %s.', db_name)
             db.connection.ping()
         else:
-            logger.debug(u'Get cursor for db %s.', db_name)
+            logger.debug('Get cursor for db %s.', db_name)
             db.cursor()
         return True
     except Exception:
-        logger.exception(u'Error verifying db %s.', db_name)
+        logger.exception('Error verifying db %s.', db_name)
         return False
 
 
@@ -52,14 +52,14 @@ def _db_is_not_read_only(db_name):
             return cursor.fetchone()[0] != 'READ ONLY'
 
     except Exception:
-        logger.exception(u'Error verifying db %s.', db_name)
+        logger.exception('Error verifying db %s.', db_name)
         return False
 
 
 def check_db(
     checker, db_name, cache_seconds=0, number_of_tries=1, force=False
 ):
-    assert number_of_tries >= 1, u'Number of tries must be >= 1.'
+    assert number_of_tries >= 1, 'Number of tries must be >= 1.'
 
     cache_td = timedelta(seconds=cache_seconds)
 
@@ -72,40 +72,40 @@ def check_db(
     if death_time:
         if death_time + cache_td > datetime.now():
             logger.debug(
-                u'Last check "%s" %s was less than %d ago, no check needed.',
+                'Last check "%s" %s was less than %d ago, no check needed.',
                 checker_name, db_name, cache_seconds
             )
             if not force:
                 return False
-            logger.debug(u'Force check "%s" %s.', db_name, checker_name)
+            logger.debug('Force check "%s" %s.', db_name, checker_name)
 
         else:
             del check_cache[db_name]
             logger.debug(
-                u'Last check "%s" %s was more than %d ago, checking again.',
+                'Last check "%s" %s was more than %d ago, checking again.',
                 db_name, checker_name, cache_seconds
             )
     else:
         logger.debug(
-            u'%s cache for "%s" is empty.',
+            '%s cache for "%s" is empty.',
             checker_name, db_name
         )
 
     for count in range(1, number_of_tries + 1):
         result = checker(db_name)
         logger.debug(
-            u'Trying to check "%s" %s: %d try.',
+            'Trying to check "%s" %s: %d try.',
             db_name, checker_name, count
         )
         if result:
             logger.debug(
-                u'After %d tries "%s" %s = True',
+                'After %d tries "%s" %s = True',
                 count, db_name, checker_name
             )
             break
 
     if not result:
-        msg = u'After %d tries "%s" %s = False.'
+        msg = 'After %d tries "%s" %s = False.'
         logger.warning(msg, number_of_tries, db_name, checker_name)
         check_cache[db_name] = datetime.now()
 
